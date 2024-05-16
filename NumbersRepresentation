@@ -1,0 +1,112 @@
+/*
+https://app.codesignal.com/practice-question/question/recovery?context=otherTypes
+Implement the missing code, denoted by ellipses. You may not modify the pre-existing code.
+Consider two following representations of a non-negative integer:
+
+A simple decimal integer, constructed of a non-empty sequence of digits from 0 to 9;
+An integer with at least one digit in a base from 2 to 16 (inclusive), enclosed between # characters, and preceded by the base, which can only be a number between 2 and 16 in the first representation. For digits from 10 to 15 characters a, b, ..., f and A, B, ..., F are used.
+Additionally, both representations may contain underscore (_) characters; they are used only as separators for improving legibility of numbers and can be ignored while processing a number.
+
+Your task is to determine whether the given string is a valid integer representation.
+
+Note: this is how integer numbers are represented in the programming language Ada.
+
+Example
+
+For line = "123_456_789", the output should be
+solution(line) = true;
+For line = "16#123abc#", the output should be
+solution(line) = true;
+For line = "10#123abc#", the output should be
+solution(line) = false;
+For line = "10#10#123ABC#", the output should be
+solution(line) = false;
+For line = "10#0#", the output should be
+solution(line) = true;
+For line = "10##", the output should be
+solution(line) = false.
+Input/Output
+
+[execution time limit] 3 seconds (java)
+
+[memory limit] 1 GB
+
+[input] string line
+
+A non-empty string.
+
+Guaranteed constraints:
+2 ≤ line.length ≤ 30.
+
+[output] boolean
+
+true if line is a valid integer representation, false otherwise.
+
+[Java] Syntax Tips
+
+// Prints help message to the console
+// Returns a string
+// 
+// Globals declared here will cause a compilation error,
+// declare variables inside the function instead!
+String helloWorld(String name) {
+    System.out.println("This prints to the console when you Run Tests");
+    return "Hello, " + name;
+}
+ */
+boolean solution(String line) {
+  boolean atLeastOneDigit = false;
+  if (line.charAt(line.length() - 1) == '#') {
+    int i = 0;
+    int base = 0;
+    int firstHashPosition = line.indexOf('#');
+    System.out.println("first: " + firstHashPosition);
+    try {
+      base = Integer.parseInt(line.substring(0, firstHashPosition));
+    } catch (NumberFormatException e) {
+      System.out.println("line11");
+      return false; // Unable to parse base as an integer
+    }
+    System.out.println("base: " + base);
+    line = line.substring(firstHashPosition);
+    System.out.println("line: " + line);
+    if (base < 2 || base > 16) {
+      return false;
+    }
+    i++;
+    while (i < line.length() - 1) {
+      if (line.charAt(i) != '_') {
+        int digit = -1;
+        if ('a' <= line.charAt(i) && line.charAt(i) <= 'f') {
+          digit = (int)line.charAt(i) - (int)'a' + 10;
+        }
+        if ('A' <= line.charAt(i) && line.charAt(i) <= 'F') {
+          digit = (int)line.charAt(i) - (int)'A' + 10;
+        }
+        if ('0' <= line.charAt(i) && line.charAt(i) <= '9') {
+          digit = line.charAt(i) - (int)'0';
+        }
+        if (0 <= digit && digit < base) {
+          atLeastOneDigit = true;
+        }
+        else {
+          return false;
+        }
+      }
+      i++;
+    }
+  }
+  else {
+    for (int i = 0; i < line.length(); i++) {
+      if (line.charAt(i) != '_') {
+        if ('0' <= line.charAt(i) && line.charAt(i) <= '9') {
+          atLeastOneDigit = true;
+        }
+        else {
+          return false;
+        }
+      }
+    }
+  }
+  return atLeastOneDigit;
+}
